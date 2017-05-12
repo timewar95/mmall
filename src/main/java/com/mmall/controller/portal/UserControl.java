@@ -54,4 +54,11 @@ public class UserControl {
 
         return iUserService.register(user);
     }
+
+    @RequestMapping(value = "check_valid.do",method =RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> checkVaild(String str,String type)
+    {
+        return iUserService.checkVaild(str,type);
+    }
 }

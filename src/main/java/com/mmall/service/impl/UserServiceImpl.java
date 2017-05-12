@@ -42,17 +42,19 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public ServerResponse<String> register(User user) {
-        int resultcount=userMapper.checekUserName(user.getUsername());
-        if(resultcount>0)
+        //使用校验功能校验用户名和邮箱是否在数据库中已存在，参数一为检测的字段的字符，参数二要检测的字段
+        ServerResponse<String> checkResponse=checkVaild(user.getUsername(),Const.USERNAME);
+        //校验不成功，即用户名在数据库中已存在，直接返回ServerResponse
+        if(!checkResponse.isSuccess())
         {
-            return ServerResponse.createByErrorMessage("用户名已存在");
+            return checkResponse;
+        }
+        checkResponse=checkVaild(user.getEmail(),Const.EMAIL);
+        if(!checkResponse.isSuccess())
+        {
+            return checkResponse;
         }
 
-        resultcount=userMapper.checekEmail(user.getEmail());
-        if(resultcount>0)
-        {
-            return ServerResponse.createByErrorMessage("邮箱已存在");
-        }
 
         //设置用户角色
         user.setRole(Const.ROLE.ROLE_CUSTOMER);
@@ -60,11 +62,38 @@ public class UserServiceImpl implements IUserService{
         user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
 
         //向数据库插入用户
-        resultcount=userMapper.insert(user);
+        int resultcount=userMapper.insert(user);
         if(resultcount==0)
         {
             return ServerResponse.createByErrorMessage("注册失败");
         }
         return ServerResponse.createBySuccessMessage("注册成功");
+    }
+
+    @Override
+    //参数一:要判断的字符数据  参数二:要判断的字段
+    public ServerResponse<String> checkVaild(String str, String type){
+        //要判断的字段非空才进行判断
+        if(org.apache.commons.lang3.StringUtils.isNotBlank(type))
+        {
+            //开始校验
+            if(Const.EMAIL.equals(type)) {
+                int resultcount=userMapper.checekUserName(str);
+                if(resultcount>0) {
+                    return ServerResponse.createByErrorMessage("用户名已存在");
+                }
+            }
+
+            if(Const.USERNAME.equals(type)){
+                int resultcount=userMapper.checekEmail(str);
+                if(resultcount>0) {
+                    return ServerResponse.createByErrorMessage("邮箱已存在");
+                }
+            }
+        }else{
+            return ServerResponse.createByErrorMessage("参数错误");
+        }
+
+        return ServerResponse.createBySuccessMessage("校验成功");
     }
 }

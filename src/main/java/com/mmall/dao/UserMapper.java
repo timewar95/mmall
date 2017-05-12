@@ -18,5 +18,7 @@ public interface UserMapper {
 
     int checekUserName(String username);
 
+    int checekEmail(String email);
+
     User selectLogin(@Param("username") String username,@Param("password") String password);
 }

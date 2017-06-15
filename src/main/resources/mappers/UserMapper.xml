@@ -207,4 +207,5 @@
     where email=#{email}
     and id!=#{id}
   </select>
+
 </mapper>

@@ -93,7 +93,7 @@ public class ProductManagerController {
         }
         if(iUserService.checkAdmin(user).isSuccess()) {
             //验证管理员，业务代码放这里
-            return iProductService.getDetailProduct(productId);
+            return iProductService.manageDetailProduct(productId);
         }
         //非管理员
         return ServerResponse.createByErrorMessage("用户非管理员,无权添加商品");

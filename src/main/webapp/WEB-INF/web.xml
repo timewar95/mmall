@@ -23,12 +23,12 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- 启动监听器-->
+    <!-- 可选配置:使spring容器中的Bean获得request，session，globalsession作用域的支持-->
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
 
-    <!-- spring配置监听器 整合web容器和spring容器-->
+    <!-- 必须配置：spring配置监听器 整合web容器和spring容器-->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -38,7 +38,6 @@
             classpath:applicationContext.xml
         </param-value>
     </context-param>
-
     <!-- spring mvc配置,拦截*.do请求-->
     <servlet>
         <servlet-name>dispatcher</servlet-name>
@@ -49,6 +48,5 @@
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
-
 </web-app>
 

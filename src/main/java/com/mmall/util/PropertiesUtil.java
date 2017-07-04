@@ -19,7 +19,8 @@ public class PropertiesUtil {
         String fileName="mmall.properties";
         props=new Properties();
         try {
-            props.load(new InputStreamReader(PropertiesUtil.class.getClassLoader().getResourceAsStream(fileName)));
+
+            props.load(new InputStreamReader(PropertiesUtil.class.getClassLoader().getResourceAsStream(fileName),"utf-8"));
         } catch (IOException e) {
             logger.error("mmall.properties配置文件初始化错误",e);
         }
@@ -39,10 +40,8 @@ public class PropertiesUtil {
         }
         return value;
     }
-
     public static void main(String[] args) {
         String value = PropertiesUtil.getProperty("ftp.server.ip");
         System.out.println(value);
-
     }
 }

@@ -1,5 +1,6 @@
 package com.mmall.controller.backend;
 
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Maps;
 import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;

@@ -18,18 +18,37 @@ public class FTPUtil {
     private static String ftpPass=PropertiesUtil.getProperty("ftp.pass");
     private static Logger logger= LoggerFactory.getLogger(FTPUtil.class);
 
-
+    private String ip;
+    private String user;
+    private String userPass;
+    private int port;
+    private FTPClient ftpClient;
+    public FTPUtil(String ip, String user, String userPass, int port) {
+        this.ip = ip;
+        this.user = user;
+        this.userPass = userPass;
+        this.port = port;
+    }
     public static boolean upload(List<File> fileList) throws IOException {
         //ftp服务器地址 连接ftp服务器用户名 连接ftp服务器密码 ftp服务器端口
         FTPUtil ftpUtil=new FTPUtil(ftpIp,ftpUser,ftpPass,21);
         logger.info("开始连接Ftp服务器上传文件");
-        boolean result=ftpUtil.upload(fileList,"img");
+        boolean result=ftpUtil.uploadServer(fileList,"img");
+        logger.info("上传文件到Ftp服务器完成,上传结果{}",result);
+        return result;
+    }
+    //上传文件集合，上传到FTP服务器的哪个文件夹下
+    public static boolean upload(List<File> fileList,String remoteFile) throws IOException {
+        //ftp服务器地址 连接ftp服务器用户名 连接ftp服务器密码 ftp服务器端口
+        FTPUtil ftpUtil=new FTPUtil(ftpIp,ftpUser,ftpPass,21);
+        logger.info("开始连接Ftp服务器上传文件");
+        boolean result=ftpUtil.uploadServer(fileList,remoteFile);
         logger.info("上传文件到Ftp服务器完成,上传结果{}",result);
         return result;
     }
 
     //remotePath 上传到Ftp服务器哪个文件夹下
-    public boolean upload(List<File> fileList,String remotePath) throws IOException {
+    public boolean uploadServer(List<File> fileList,String remotePath) throws IOException {
         FileInputStream fis=null;
         //是否上传成功
         boolean isSuccess=false;
@@ -46,10 +65,10 @@ public class FTPUtil {
                 ftpClient.setControlEncoding("UTF-8");
                 //ftp服务器服务为被动连接模式
                 ftpClient.enterLocalPassiveMode();
-
                 //开始上传文件到ftp服务器
                 for(File fileItem:fileList) {
                     fis=new FileInputStream(fileItem);
+                    //参数一:上传文件在ftp服务器的名字
                     ftpClient.storeFile(fileItem.getName(),fis);
                 }
                 isSuccess=true;
@@ -75,18 +94,6 @@ public class FTPUtil {
         }
         return isSuccess;
     }
-
-    public FTPUtil(String ip, String user, String userPass, int port) {
-        this.ip = ip;
-        this.user = user;
-        this.userPass = userPass;
-        this.port = port;
-    }
-    private String ip;
-    private String user;
-    private String userPass;
-    private int port;
-    private FTPClient ftpClient;
     public String getIp() {
         return ip;
     }

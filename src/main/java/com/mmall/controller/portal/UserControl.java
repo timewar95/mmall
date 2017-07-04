@@ -163,6 +163,7 @@ public class UserControl {
 
         //更加登录用户设置要更新的用户Id
         user.setId(currentUser.getId());
+        user.setUsername(currentUser.getUsername());
         ServerResponse<User> response=iUserService.updateInformation(user);
 
         //个人信息更新成功的话 issuccess返回true
